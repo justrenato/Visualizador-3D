@@ -1,23 +1,29 @@
 #include "leitura.h"
 
-// #define PRINTINFOS //n tirar essa caralha daqui plz ♥
+#define PRINTINFOS 
 
 int main(int argc, char* argv[]){
 	struct objeto *obj=(struct objeto*)malloc(sizeof(struct objeto));
 	struct objeto *proj=(struct objeto*)malloc(sizeof(struct objeto));
 
 	/*Leitura do arquivo*/
-	if(argc == 2){
-		FILE *arq= fopen(argv[1],"r");
-		if (arq == NULL) {
-			printf("Arquivo \"%s\", não encontrado.\n",argv[1]);
-			return -1;
-		} 
-		else lerObj(obj,arq); //leitura por argumento na linha de comando
-	}
-	else lerObj_Stdin(obj); //leitura por entrada padrão
+	FILE *arq= fopen("teapot.obj","r");
+	if (arq == NULL) {
+		printf("Arquivo \"%s\", não encontrado.\n",argv[1]);
+		return -1;
+	} 
+	lerObj(obj,arq); 
+	// if(argc == 2){
+	// 	FILE *arq= fopen(argv[1],"r");
+	// 	if (arq == NULL) {
+	// 		printf("Arquivo \"%s\", não encontrado.\n",argv[1]);
+	// 		return -1;
+	// 	} 
+	// 	// else lerObj(obj,arq); //leitura por argumento na linha de comando
+	// }
+	// else lerObj_Stdin(obj); //leitura por entrada padrão
 
-	//inicia SDL
+	// inicia SDL
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Surface* window = SDL_SetVideoMode(WIDTH,HEIGHT,0, SDL_HWSURFACE | SDL_DOUBLEBUF);
 
@@ -38,7 +44,7 @@ int main(int argc, char* argv[]){
     int sair=0;
     while (!sair){
 
-    	/*tratar teclado hihi*/
+    // 	/*tratar teclado*/
     	while(SDL_PollEvent(&event)!=0){
     		SDL_PollEvent(&event);
     		if (event.type == SDL_QUIT) sair = 1;
@@ -52,15 +58,23 @@ int main(int argc, char* argv[]){
     				break;
     				case SDLK_UP:
     					cam.y++;
+						SDL_FillRect(window, NULL, SDL_MapRGB(window->format, 0, 0, 0));
+						calcProj( obj,proj,&ajust,&cam);
     				break;
     				case SDLK_DOWN:
     					cam.y--;
+						SDL_FillRect(window, NULL, SDL_MapRGB(window->format, 0, 0, 0));
+						calcProj( obj,proj,&ajust,&cam);
     				break;
     				case SDLK_RIGHT:
     					cam.x++;
+						SDL_FillRect(window, NULL, SDL_MapRGB(window->format, 0, 0, 0));
+						calcProj( obj,proj,&ajust,&cam);
     				break;
     				case SDLK_LEFT:
     					cam.x++;
+						SDL_FillRect(window, NULL, SDL_MapRGB(window->format, 0, 0, 0));
+						calcProj( obj,proj,&ajust,&cam);
     				break;
 
     				default: //se não tiver essa linha reclama que não ha "case" para as outras teclas do teclado
@@ -69,7 +83,6 @@ int main(int argc, char* argv[]){
     		}
     	}
 	
-		calcProj( obj,proj,&ajust,&cam);
 
 		for (int i=0; i<obj->nface; i++){
 			int tam = obj->faces[i].nponts;
@@ -129,6 +142,6 @@ int main(int argc, char* argv[]){
 	// 	}
 	// 	printf("\n");
 	// }
-    SDL_Quit();
+    // SDL_Quit();
 	return 0;
 }

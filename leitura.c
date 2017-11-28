@@ -89,17 +89,19 @@ void lerObj(struct objeto *obj, FILE *arq){
 	obj->nvert=0;
 	obj->nface=0;
 	int fim=0;
+		// obj->vertices=malloc(obj->nvert*sizeof(struct vertice));
+		// obj->faces=malloc(obj->nvert*sizeof(struct vertice));
 	while (!fim){
 		linha=freadL(arq,&fim);
 		if ((linha[0]=='v')&&(linha[1]==' ')){
-			obj->nvert++;
-			obj->vertices=(struct vertice *)realloc(obj->vertices,obj->nvert*sizeof(struct vertice));
-			lerVert(&linha[2],&obj->vertices[obj->nvert-1]);
+			// obj->nvert++;
+			// obj->vertices=(struct vertice *)realloc(obj->vertices,obj->nvert*sizeof(struct vertice));
+			// lerVert(&linha[2],&obj->vertices[obj->nvert-1]);
 		}else
 		if ((linha[0]=='f')&&(linha[1]==' ')){
-			obj->nface++;
-			obj->faces=(struct face *)realloc(obj->faces,obj->nface*sizeof(struct face));
-			lerFace(&linha[2],&obj->faces[obj->nface-1]);
+			// obj->nface++;
+			// obj->faces=(struct face *)realloc(obj->faces,obj->nface*sizeof(struct face));
+			// lerFace(&linha[2],&obj->faces[obj->nface-1]);
 		}
 	}
 }
@@ -113,11 +115,15 @@ void lerObj_Stdin(struct objeto *obj){
 	int fim=0;
 	while (!fim){
 		linha=readL(&fim);
+		// printf("obj->nvert %d\n",obj->nvert );
+		obj->nvert++;
+		// printf("obj->nvert %d\n",obj->nvert );
 		if ((linha[0]=='v')&&(linha[1]==' ')){
 			obj->nvert++;
 			obj->vertices=(struct vertice *)realloc(obj->vertices,obj->nvert*sizeof(struct vertice));
 			lerVert(&linha[2],&obj->vertices[obj->nvert-1]);
-		}else
+		}
+		else
 		if ((linha[0]=='f')&&(linha[1]==' ')){
 			obj->nface++;
 			obj->faces=(struct face *)realloc(obj->faces,obj->nface*sizeof(struct face));
@@ -128,8 +134,8 @@ void lerObj_Stdin(struct objeto *obj){
 
 void calcProj(struct objeto *obj,struct objeto *proj,struct cord_tela *ajust, struct vertice *cam){
 	/*CALCULA PROJEÇÃO 2D DO OBJETO*/
+	proj->vertices=malloc(obj->nvert*sizeof(struct vertice));
 	for (int i =0; i<obj->nvert; i++){
-		proj->vertices=(struct vertice *)realloc(obj->vertices,obj->nvert*sizeof(struct vertice));
 
 		proj->vertices[i].x = (cam->x + cam->z) * (obj->vertices[i].x - cam->x) / (obj->vertices[i].z + cam->z); //Formula
 		proj->vertices[i].y = (cam->y + cam->z) * (obj->vertices[i].y - cam->y) / (obj->vertices[i].z + cam->z); //Formula
@@ -192,13 +198,13 @@ void calcProj(struct objeto *obj,struct objeto *proj,struct cord_tela *ajust, st
 	#endif
 
 					/*POSICIONA OBJETO NO CENTRO DA TELA E APLICA ESCALA*/
-for(int i=0; i<obj->nvert; i++){
-	proj->vertices[i].x = ((proj->vertices[i].x - ajust->xcent) *ajust->escala) + WIDTH  / 2; //Formula
-	proj->vertices[i].y = ((proj->vertices[i].y - ajust->ycent) *ajust->escala) + HEIGHT / 2;	//Formula
+	for(int i=0; i<obj->nvert; i++){
+		proj->vertices[i].x = ((proj->vertices[i].x - ajust->xcent) *ajust->escala) + WIDTH  / 2; //Formula
+		proj->vertices[i].y = ((proj->vertices[i].y - ajust->ycent) *ajust->escala) + HEIGHT / 2;	//Formula
 
-	#ifdef PRINTINFOS
-	printf("proj->vertices[%d].x:%f\n",i,proj->vertices[i].x );
-	printf("proj->vertices[%d].y:%f\n",i,proj->vertices[i].y );
-	#endif
-}
+		#ifdef PRINTINFOS
+		printf("proj->vertices[%d].x:%f\n",i,proj->vertices[i].x );
+		printf("proj->vertices[%d].y:%f\n",i,proj->vertices[i].y );
+		#endif
+	}
 }
